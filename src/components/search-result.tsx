@@ -43,7 +43,7 @@ export function SearchResult(
             </Link>
             <div className="flex flex-col">
                 <Link href={href} className="text-xl text-blue-300">{title}</Link>
-                <span className="test-sm text-white/80">{description}</span>
+                <span className="text-sm text-white/80 leading-5">{description}</span>
             </div>
             {
                 links && links.length > 0 &&
