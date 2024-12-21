@@ -2,6 +2,10 @@ import React from 'react';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
+import Link from 'next/link';
+import { SearchResult } from '@/components/search-result';
+import { PublicUser } from '@/lib/github-user';
 
 export default async function Home() {
 
