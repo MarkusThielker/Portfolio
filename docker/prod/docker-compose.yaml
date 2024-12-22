@@ -1,0 +1,19 @@
+services:
+
+  portfolio:
+    container_name: markus_portfolio
+    image: markusthielker/portfolio:v2.0.0
+    restart: unless-stopped
+    networks:
+      - web
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.markus-dev-portfolio.rule=Host(`thielker.dev`)
+      - traefik.http.routers.markus-dev-portfolio.entrypoints=websecure
+      - traefik.http.routers.markus-dev-portfolio.tls=true
+      - traefik.http.routers.markus-dev-portfolio.tls.certresolver=lets-encrypt
+      - com.centurylinklabs.watchtower.enable=true
+
+networks:
+  web:
+    external: true

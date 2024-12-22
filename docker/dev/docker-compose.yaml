@@ -1,0 +1,8 @@
+services:
+
+  portfolio:
+    container_name: markus_portfolio
+    image: markusthielker/portfolio:v2.0.0
+    restart: unless-stopped
+    ports:
+      - "80:3000"
