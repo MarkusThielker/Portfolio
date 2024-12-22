@@ -2,10 +2,11 @@ import React from 'react';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import Link from 'next/link';
 import { SearchResult } from '@/components/search-result';
-import { PublicUser } from '@/lib/github-user';
+import { PublicUser, Repository } from '@/lib/github';
 
 const calculateAge = (birthdate: Date): number => {
     const today = new Date();
@@ -21,7 +22,7 @@ const calculateAge = (birthdate: Date): number => {
 };
 
 const getRepos = async (username: string) => {
-    let repos: any[] = [];
+    let repos: Repository[] = [];
     let page = 1;
     let hasNextPage = true;
 
@@ -45,7 +46,7 @@ const getRepos = async (username: string) => {
     return repos;
 };
 
-const getLanguages = async (repo: any) => {
+const getLanguages = async (repo: Repository) => {
     const response = await fetch(repo.languages_url, {
         headers: {
             Accept: 'application/vnd.github+json',
@@ -54,7 +55,7 @@ const getLanguages = async (repo: any) => {
     return await response.json();
 };
 
-const accumulateLanguages = async (repos: any[]) => {
+const accumulateLanguages = async (repos: Repository[]) => {
     const languages: { [key: string]: number } = {};
 
     for (const repo of repos) {
@@ -67,6 +68,16 @@ const accumulateLanguages = async (repos: any[]) => {
     return languages;
 };
 
+const accumulateStars = (repos: Repository[]) => {
+
+    let stars = 0;
+    for (const repo of repos) {
+        stars = stars + repo.stargazers_count;
+    }
+
+    return stars;
+};
+
 export default async function Home() {
 
     const profileResponse = await fetch('https://api.github.com/users/markusthielker');
@@ -75,15 +86,16 @@ export default async function Home() {
     const username = 'markusthielker';
     const repos = await getRepos(username);
     const languages = await accumulateLanguages(repos);
+    const stars = accumulateStars(repos);
     const totalBytes = Object.values(languages).reduce((sum, bytes) => sum + bytes, 0);
 
     const languagePercentages = Object.entries(languages)
         .map(([lang, bytes]) => ({
-            lang,
+            name: lang,
             percent: (bytes / totalBytes) * 100,
         }))
         .sort((a, b) => b.percent - a.percent)
-        .slice(0, 5);
+        .slice(0, 3);
 
     const age = calculateAge(new Date('2001-03-04'));
 
@@ -93,12 +105,12 @@ export default async function Home() {
             { /* search header */}
             <header className="relative p-4 pb-0 lg:p-8 lg:pb-0">
 
-                <Image
-                    height="35"
-                    width="35"
-                    src="/portrait.png"
-                    className="hidden lg:block absolute rounded cursor-pointer"
-                    alt="Portrait of Markus Thielker"/>
+                <div className="hidden lg:block absolute top-10 cursor-pointer text-3xl">
+                    <span className="text-blue-500">T</span>
+                    <span className="text-yellow-500">L</span>
+                    <span className="text-green-500">K</span>
+                    <span className="text-red-500">R</span>
+                </div>
 
                 { /* header content (centered) */}
                 <div className="flex items-center justify-center">
@@ -106,12 +118,12 @@ export default async function Home() {
 
                         { /* input */}
                         <Input
-                            className="w-full"
+                            className="w-full bg-neutral-700 p-6 rounded-full"
                             value="Who the fuck is Markus Thielker?"
                             readOnly/>
 
                         { /* tab navigation */}
-                        <div className="flex flex-row w-full mt-8 text-sm text-white/50 cursor-pointer">
+                        <div className="flex flex-row w-full mt-6 text-sm text-white/50 cursor-pointer">
                             <span className="font-semibold text-white/90 border-white border-b-2 px-3 pb-2">All</span>
                             <span className="px-3 pb-2">News</span>
                             <span className="px-3 pb-2">Images</span>
@@ -144,28 +156,31 @@ export default async function Home() {
                             className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 grid-rows-3 lg:grid-rows-2 gap-4 max-h-92 lg:max-h-72">
 
                             { /* images */}
-                            <Card className="col-span-4 row-span-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 grid-rows-1 lg:grid-rows-2 overflow-hidden">
-                                <div className="flex col-span-1 lg:col-span-3 row-span-1 lg:row-span-2 items-center overflow-hidden">
+                            <Card
+                                className="col-span-4 row-span-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 grid-rows-1 lg:grid-rows-2 overflow-hidden gap-0.5">
+                                <div
+                                    className="flex col-span-1 lg:col-span-3 row-span-1 lg:row-span-2 items-center overflow-hidden">
                                     <Image
                                         height="500"
                                         width="500"
-                                        src="/portrait.png"
+                                        src="/portrait-two.png"
                                         className="aspect-square overflow-hidden"
                                         alt="Portrait of Markus Thielker"/>
                                 </div>
                                 <div className="flex col-span-1 lg:col-span-2 row-span-1 items-center overflow-hidden">
                                     <Image
-                                        height="500"
-                                        width="500"
-                                        src="/portrait.png"
-                                        className="aspect-square overflow-hidden"
+                                        height="1200"
+                                        width="1600"
+                                        src="/portrait-one.jpg"
+                                        className="overflow-hidden"
                                         alt="Portrait of Markus Thielker"/>
                                 </div>
-                                <div className="hidden md:flex col-span-1 lg:col-span-2 row-span-1 items-center overflow-hidden">
+                                <div
+                                    className="hidden md:flex col-span-1 lg:col-span-2 row-span-1 items-center overflow-hidden">
                                     <Image
                                         height="500"
                                         width="500"
-                                        src="/portrait.png"
+                                        src="/portrait-three.png"
                                         className="aspect-square overflow-hidden"
                                         alt="Portrait of Markus Thielker"/>
                                 </div>
@@ -187,10 +202,21 @@ export default async function Home() {
                                         </div>
                                         <div className="flex flex-col mt-2 space-y-4">
                                             <div className="flex flex-col text-white/80 -space-y-1">
-                                                <span className="text-lg">{profile.name}</span>
-                                                <span className="text-lg">{profile.followers} Followers</span>
+                                                <span className="text-lg">MarkusThielker</span>
+                                                {
+                                                    stars > 0 ?
+                                                        <span className="text-lg">{stars} total stars</span>
+                                                        :
+                                                        <Skeleton className="w-16"/>
+                                                }
+                                                {
+                                                    profile.followers ?
+                                                        <span className="text-lg">{profile.followers} followers</span>
+                                                        :
+                                                        <Skeleton className="w-12"/>
+                                                }
                                             </div>
-                                            <span className="text-sm text-white/50">{profile.bio}</span>
+                                            <span className="text-sm text-white/50">Full stack developer of Kotlin and Java backends with experience in Android, React and Angular frontend development.</span>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -204,8 +230,8 @@ export default async function Home() {
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="flex flex-col">
-                                    <span className="text-lg text-white/80">23 Jahre</span>
-                                    <span className="text-sm text-white/80">04. März 2001</span>
+                                    <span className="text-lg text-white/80">{age} years</span>
+                                    <span className="text-sm text-white/80">March 2001</span>
                                 </CardContent>
                             </Card>
 
@@ -226,19 +252,23 @@ export default async function Home() {
                             <Card className="hidden lg:block col-span-2 row-span-1">
                                 <CardHeader>
                                     <CardDescription>
-                                        Employer
+                                        Languages
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     {
-                                        languagePercentages &&
-                                        <ul>
-                                            {Object.entries(languagePercentages).map(([lang, percent]) => (
-                                                <li key={lang}>
-                                                    {lang}: {percent as unknown as string} %
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        languagePercentages ?
+                                            <ul>
+                                                {Object.entries(languagePercentages).map(([index, language]) => (
+                                                    <li key={index} className="text-sm text-white/80">
+                                                        {language.name}: {Math.round(language.percent)} %
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            :
+                                            <div>
+
+                                            </div>
                                     }
                                 </CardContent>
                             </Card>
@@ -256,7 +286,7 @@ export default async function Home() {
                                 website_icon_uri="/linkedin-logo.png"
                                 href="https://linkedin.com/in/markusthielker"
                                 title="LinkedIn"
-                                description="Als erfahrener Softwareentwickler bin ich stolz darauf, innovative Software Lösungen zu schaffen. Neben meiner beruflichen Tätigkeit engagiere ich mich auch in persönlichen Projekten, insbesondere in den Bereichen Web- und Android Full Stack Entwicklung."/>
+                                description="As an experienced software developer, I take pride in crafting innovative software solutions. Beyond my professional role, I'm actively involved in personal projects, especially in the areas of web and Android full stack development."/>
 
                             <SearchResult
                                 website="GitHub"
@@ -277,7 +307,7 @@ export default async function Home() {
                                 website_icon_uri="/github-logo.png"
                                 href="https://github.com/markusthielker/next-ory"
                                 title="MarkusThielker/next-ory"
-                                description="☄️An easy-to-use starting point to self-host Ory Kratos with OAuth2 and
+                                description="☄️An easy-to-use starting point to self-host the Ory stack with OAuth2 and
                                 OIDC, NextJS authentication UI and admin dashboard (work in progress) styled with
                                 TailwindCSS and shadcn/ui"
                                 links={[
@@ -294,25 +324,32 @@ export default async function Home() {
                         </div>
 
                         { /* person info column */}
-                        <div
-                            className="hidden lg:flex flex-col p-4 col-span-1 text-sm space-y-2 border-l border-white/15">
-                            <span className="text-xl">Info</span>
-                            <span className="text-md text-white/60 leading-5">
-                                Markus Thielker ist ein {age} Jahre alter Software Engineer aus Neu-Ulm, Deutschland.
-                                Er entwickelt, nach einiger Jahre Android App Entwicklung, webbasierte Sofwtare. Dabei
-                                verwendet er vorranig Next.js und Angular.
+                        <div className="hidden lg:flex flex-row col-span-1 space-x-4">
+
+                            <Separator orientation="vertical" className="h-52"/>
+
+                            <div className="flex flex-col text-sm space-y-2">
+                                <span className="text-xl">Info</span>
+                                <span className="text-md text-white/60 leading-5">
+                                Markus Thielker is a {age} year old software engineer from Neu-Ulm, Germany.
+                                After several years of Android app development, he now develops web-based software.
+                                In doing so he primarily uses Next.js and Angular.
                             </span>
-                            <div className="flex flex-col">
-                                <span><strong>Degree:</strong> None</span>
-                                <span><strong>Experience:</strong> 2.5 years</span>
-                                <span><strong>Pets:</strong> One dog</span>
-                                <span><strong>Favorite Tech:</strong> Next.js & Kotlin</span>
+                                <div className="flex flex-col">
+                                    <span><strong>Degree:</strong> None</span>
+                                    <span><strong>Work Experience:</strong> 2.5 years</span>
+                                    <span><strong>Pets:</strong> The cutest dog in the world</span>
+                                    <span><strong>Favorite Tech:</strong> Next.js & Kotlin</span>
+                                </div>
                             </div>
                         </div>
                     </section>
                 </div>
             </main>
 
+            <footer className="flex items-center justify-center mt-8 h-16 bg-neutral-900">
+                <span className="text-white/45">Markus Thielker  &copy;  2024</span>
+            </footer>
         </div>
     );
 }
