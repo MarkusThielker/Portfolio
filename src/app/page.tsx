@@ -98,6 +98,7 @@ export default async function Home() {
         .slice(0, 3);
 
     const age = calculateAge(new Date('2001-03-04'));
+    const year = new Date().getFullYear()
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -105,7 +106,7 @@ export default async function Home() {
             { /* search header */}
             <header className="relative p-4 pb-0 lg:p-8 lg:pb-0">
 
-                <div className="hidden lg:block absolute top-10 cursor-pointer text-3xl">
+                <div className="hidden xl:flex absolute top-10 cursor-pointer text-3xl">
                     <span className="text-blue-500">T</span>
                     <span className="text-yellow-500">L</span>
                     <span className="text-green-500">K</span>
@@ -117,10 +118,18 @@ export default async function Home() {
                     <div className="flex flex-col items-center w-full justify-start max-w-6xl">
 
                         { /* input */}
-                        <Input
-                            className="w-full bg-neutral-700 p-6 rounded-full"
-                            value="Who the fuck is Markus Thielker?"
-                            readOnly/>
+                        <div className="relative w-full">
+                            <Input
+                                className="w-full bg-neutral-700 p-6 pl-24 xl:pl-6 rounded-full"
+                                value="Who the fuck is Markus Thielker?"
+                                readOnly/>
+                            <div className="xl:hidden absolute top-2.5 left-5 cursor-pointer text-2xl">
+                                <span className="text-blue-500">T</span>
+                                <span className="text-yellow-500">L</span>
+                                <span className="text-green-500">K</span>
+                                <span className="text-red-500">R</span>
+                            </div>
+                        </div>
 
                         { /* tab navigation */}
                         <div className="flex flex-row w-full mt-6 text-sm text-white/50 cursor-pointer">
@@ -128,7 +137,6 @@ export default async function Home() {
                             <span className="px-3 pb-2">News</span>
                             <span className="px-3 pb-2">Images</span>
                             <span className="px-3 pb-2">Videos</span>
-                            <span className="px-3 pb-2">Books</span>
                             <span className="px-3 pb-2">Web</span>
                             <span className="px-3 pb-2">Finances</span>
                         </div>
@@ -151,128 +159,123 @@ export default async function Home() {
                     </section>
 
                     { /* card grid */}
-                    <section className="w-full overflow-y-scroll">
-                        <div
-                            className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 grid-rows-3 lg:grid-rows-2 gap-4 max-h-92 lg:max-h-72">
+                    <section className="grid gap-4 grid-cols-2 sm:grid-cols-4 md:grid-cols-8">
 
-                            { /* images */}
-                            <Card
-                                className="col-span-4 row-span-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 grid-rows-1 lg:grid-rows-2 overflow-hidden gap-0.5">
-                                <div
-                                    className="flex col-span-1 lg:col-span-3 row-span-1 lg:row-span-2 items-center overflow-hidden">
-                                    <Image
-                                        height="500"
-                                        width="500"
-                                        src="/portrait-two.png"
-                                        className="aspect-square overflow-hidden"
-                                        alt="Portrait of Markus Thielker"/>
-                                </div>
-                                <div className="flex col-span-1 lg:col-span-2 row-span-1 items-center overflow-hidden">
-                                    <Image
-                                        height="1200"
-                                        width="1600"
-                                        src="/portrait-one.jpg"
-                                        className="overflow-hidden"
-                                        alt="Portrait of Markus Thielker"/>
-                                </div>
-                                <div
-                                    className="hidden md:flex col-span-1 lg:col-span-2 row-span-1 items-center overflow-hidden">
-                                    <Image
-                                        height="500"
-                                        width="500"
-                                        src="/portrait-three.png"
-                                        className="aspect-square overflow-hidden"
-                                        alt="Portrait of Markus Thielker"/>
-                                </div>
-                            </Card>
+                        { /* images */}
+                        <Card className="col-span-2 sm:col-span-4 md:row-span-2 overflow-hidden sm:grid sm:gap-0.5 sm:grid-cols-2 lg:grid-cols-5 sm:grid-row-2 md:max-h-72">
+                            <div className="flex sm:col-span-1 lg:col-span-3 lg:row-span-2 max-h-72">
+                                <Image
+                                    height="500"
+                                    width="500"
+                                    style={{ objectFit: 'cover' }}
+                                    src="/portrait-two.png"
+                                    alt="Portrait of Markus Thielker"/>
+                            </div>
+                            <div className="hidden sm:flex lg:col-span-2 max-h-72 lg:max-h-36">
+                                <Image
+                                    height="500"
+                                    width="500"
+                                    style={{ objectFit: 'cover' }}
+                                    src="/portrait-one.png"
+                                    alt="Portrait of Markus Thielker"/>
+                            </div>
+                            <div className="hidden lg:flex lg:col-span-2 lg:max-h-36">
+                                <Image
+                                    height="500"
+                                    width="500"
+                                    style={{ objectFit: 'cover' }}
+                                    src="/portrait-three.png"
+                                    alt="Portrait of Markus Thielker"/>
+                            </div>
+                        </Card>
 
-                            { /* GitHub */}
-                            <Link href="https://github.com/markusthielker"
-                                  className="col-span-2 row-span-1 lg:row-span-2 h-full">
-                                <Card className="h-full">
-                                    <CardContent className="pt-4">
-                                        <div className="flex flex-row items-center space-x-2">
-                                            <Image
-                                                height="50"
-                                                width="50"
-                                                className="rounded-full h-4 w-4"
-                                                src="/github-logo.png"
-                                                alt="GitHub"/>
-                                            <span>GitHub</span>
+                        { /* GitHub */}
+                        <Link
+                            href="https://github.com/markusthielker"
+                            className="col-span-2 sm:row-span-2">
+                            <Card className="h-full">
+                                <CardContent className="pt-4">
+                                    <div className="flex flex-row items-center space-x-2">
+                                        <Image
+                                            height="50"
+                                            width="50"
+                                            className="rounded-full h-4 w-4"
+                                            src="/github-logo.png"
+                                            alt="GitHub"/>
+                                        <span>GitHub</span>
+                                    </div>
+                                    <div className="flex flex-col mt-2 space-y-4">
+                                        <div className="flex flex-col text-white/80 -space-y-1">
+                                            <span className="text-lg">MarkusThielker</span>
+                                            {
+                                                stars > 0 ?
+                                                    <span className="text-lg">{stars} total stars</span>
+                                                    :
+                                                    <Skeleton className="w-16"/>
+                                            }
+                                            {
+                                                profile.followers ?
+                                                    <span className="text-lg">{profile.followers} followers</span>
+                                                    :
+                                                    <Skeleton className="w-12"/>
+                                            }
                                         </div>
-                                        <div className="flex flex-col mt-2 space-y-4">
-                                            <div className="flex flex-col text-white/80 -space-y-1">
-                                                <span className="text-lg">MarkusThielker</span>
-                                                {
-                                                    stars > 0 ?
-                                                        <span className="text-lg">{stars} total stars</span>
-                                                        :
-                                                        <Skeleton className="w-16"/>
-                                                }
-                                                {
-                                                    profile.followers ?
-                                                        <span className="text-lg">{profile.followers} followers</span>
-                                                        :
-                                                        <Skeleton className="w-12"/>
-                                                }
-                                            </div>
-                                            <span className="text-sm text-white/50">Full stack developer of Kotlin and Java backends with experience in Android, React and Angular frontend development.</span>
+                                        <span className="text-sm text-white/50">Full stack developer of Kotlin and Java backends with experience in Android, React and Angular frontend development.</span>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </Link>
+
+                        { /* age */}
+                        <Card className="md:col-span-2 lg:col-span-1">
+                            <CardHeader>
+                                <CardDescription>
+                                    Age
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="flex flex-col">
+                                <span className="text-lg text-white/80">{age} years</span>
+                                <span className="text-sm text-white/80">March 2001</span>
+                            </CardContent>
+                        </Card>
+
+                        { /* employer */}
+                        <Card className="md:col-span-2 lg:col-span-1">
+                            <CardHeader>
+                                <CardDescription>
+                                    Employer
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="flex flex-col">
+                                <span className="text-lg text-white/80">None</span>
+                                <span className="text-sm text-white/80">Open for work</span>
+                            </CardContent>
+                        </Card>
+
+                        { /* TODO */}
+                        <Card className="hidden sm:block sm:col-span-2 md:hidden lg:block">
+                            <CardHeader>
+                                <CardDescription>
+                                    Languages
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {
+                                    languagePercentages ?
+                                        <ul>
+                                            {Object.entries(languagePercentages).map(([index, language]) => (
+                                                <li key={index} className="text-sm text-white/80">
+                                                    {language.name}: {Math.round(language.percent)} %
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        :
+                                        <div>
+
                                         </div>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-
-                            { /* age */}
-                            <Card className="col-span-1 row-span-1">
-                                <CardHeader>
-                                    <CardDescription>
-                                        Age
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent className="flex flex-col">
-                                    <span className="text-lg text-white/80">{age} years</span>
-                                    <span className="text-sm text-white/80">March 2001</span>
-                                </CardContent>
-                            </Card>
-
-                            { /* employer */}
-                            <Card className="col-span-1 row-span-1">
-                                <CardHeader>
-                                    <CardDescription>
-                                        Employer
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent className="flex flex-col">
-                                    <span className="text-lg text-white/80">None</span>
-                                    <span className="text-sm text-white/80">Open for work</span>
-                                </CardContent>
-                            </Card>
-
-                            { /* TODO */}
-                            <Card className="hidden lg:block col-span-2 row-span-1">
-                                <CardHeader>
-                                    <CardDescription>
-                                        Languages
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    {
-                                        languagePercentages ?
-                                            <ul>
-                                                {Object.entries(languagePercentages).map(([index, language]) => (
-                                                    <li key={index} className="text-sm text-white/80">
-                                                        {language.name}: {Math.round(language.percent)} %
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                            :
-                                            <div>
-
-                                            </div>
-                                    }
-                                </CardContent>
-                            </Card>
-                        </div>
+                                }
+                            </CardContent>
+                        </Card>
                     </section>
 
                     { /* default content (centered) */}
@@ -348,7 +351,7 @@ export default async function Home() {
             </main>
 
             <footer className="flex items-center justify-center mt-8 h-16 bg-neutral-900">
-                <span className="text-white/45">Markus Thielker  &copy;  2024</span>
+                <span className="text-white/45">Markus Thielker  &copy;  {year}</span>
             </footer>
         </div>
     );
